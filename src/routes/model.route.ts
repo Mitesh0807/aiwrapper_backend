@@ -8,6 +8,7 @@ modelRouter.post("/add", modelsController.createUser);
 modelRouter.post("/addAPI", modelsController.addApiId);
 modelRouter.delete("/deleteApiID", modelsController.deleteApiID);
 modelRouter.delete("/deleteAll", modelsController.deleteAllApi);
-modelRouter.get("/getAllApi", modelsController.getAllApi);
+modelRouter.get("/getAllApi/:userId", modelsController.getAllApi);
+modelRouter.get("/getUser/:userId", modelsController.getUser);
 
 export default modelRouter;
