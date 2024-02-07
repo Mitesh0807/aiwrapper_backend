@@ -21,13 +21,18 @@ const modelsList = async (req: Request, res: Response) => {
 };
 
 const createUser = async (req: Request, res: Response) => {
+  const { email } = req.body;
+
   try {
-    const response = await User.create(req.body);
-    res.status(200).send({ response: response });
-    return;
+    const verifyemail = await User.findOne({ email: email });
+    if (verifyemail) {
+      res.send({ response: verifyemail });
+    } else {
+      const response = await User.create(req.body);
+      res.status(200).send({ response: response });
+    }
   } catch (error) {
-    console.log(error);
-    res.send({ response: "Error in sending data " });
+    res.send({ response: "Error in adding user ", error });
   }
   return;
 };
