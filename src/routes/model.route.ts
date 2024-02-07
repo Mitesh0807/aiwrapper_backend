@@ -4,10 +4,10 @@ import modelsController from "../controller/model.controller";
 const modelRouter = Express.Router();
 
 modelRouter.get("/", modelsController.modelsList);
-modelRouter.post("/add", modelsController.postModel);
-modelRouter.post("/key", modelsController.addApiId);
-modelRouter.delete("/apiID", modelsController.deleteApiID);
-modelRouter.delete("/all", modelsController.deleteAllApi);
-modelRouter.get("/allApi", modelsController.getAllApi);
+modelRouter.post("/add", modelsController.createUser);
+modelRouter.post("/addAPI", modelsController.addApiId);
+modelRouter.delete("/deleteApiID", modelsController.deleteApiID);
+modelRouter.delete("/deleteAll", modelsController.deleteAllApi);
+modelRouter.get("/getAllApi", modelsController.getAllApi);
 
 export default modelRouter;

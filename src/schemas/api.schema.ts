@@ -9,17 +9,16 @@ const apiSchema = new mongoose.Schema({
     type: String,
     require: true,
   },
+  apiType: {
+    type: String,
+    require: true,
+    enum: [],
+  },
+  apiPurpose: {
+    type: String,
+    require: false,
+  },
 });
 
 const apiModel = mongoose.model("apikey", apiSchema);
 export default apiModel;
-
-// apiType: {
-//   type: String,
-//   require: true,
-//   enum: [],
-// },
-// apiPurpose: {
-//   type: String,
-//   require: false,
-// },

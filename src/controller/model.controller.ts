@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import apiModel from "../schemas/api.schema";
 import User from "../schemas/users.schema";
 import { Request, Response } from "express";
+
 const modelsList = async (req: Request, res: Response) => {
   try {
     const modelTypes = [
@@ -16,9 +17,10 @@ const modelsList = async (req: Request, res: Response) => {
   } catch (error) {
     res.send({ error: "error in getting models list" });
   }
+  return;
 };
 
-const postModel = async (req: Request, res: Response) => {
+const createUser = async (req: Request, res: Response) => {
   try {
     const { apiKey, apiName } = req.body;
     const response = await User.create({ name: "semil" });
@@ -47,6 +49,7 @@ const postModel = async (req: Request, res: Response) => {
     console.log(error);
     res.send({ response: "Error in sending data " });
   }
+  return;
 };
 
 const addApiId = async (req: any, res: any) => {
@@ -57,7 +60,7 @@ const addApiId = async (req: any, res: any) => {
       res.send("ewa");
       return;
     }
-    //valid mongoid
+
     const isvalidid = mongoose.isValidObjectId(id);
 
     if (!isvalidid) {
@@ -65,7 +68,7 @@ const addApiId = async (req: any, res: any) => {
     }
 
     const findUser = await User.findById(id);
-    // console.log("findUser :", findUser);
+
     if (findUser) {
       const addData = await apiModel.create({ apiKey, apiName });
       const apiIds = findUser.apiId;
@@ -81,18 +84,11 @@ const addApiId = async (req: any, res: any) => {
       res.send(updateUserData);
       return;
     }
-    // console.log("--", addData);
-
-    //user find jo exist hoy
-
-    //api name and api key api model ceate krvani
-
-    //api_id ene tare apiId push kari n update
-
     res.send(id);
   } catch (error) {
     console.log(error);
   }
+  return;
 };
 
 const deleteApiID = async (req: any, res: any) => {
@@ -180,7 +176,7 @@ const getAllApi = async (req: Request, res: Response) => {
 
 export default {
   modelsList,
-  postModel,
+  createUser,
   addApiId,
   deleteApiID,
   deleteAllApi,
