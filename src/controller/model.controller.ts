@@ -90,20 +90,41 @@ const addApiId = async (req: Request, res: Response) => {
         },
         { new: true }
       ).populate("apiId");
-      res.send(updateUserData);
+      res.send({ reesponse: updateUserData });
       return;
     }
-    res.send(id);
+    // res.send({id});
   } catch (error) {
     console.log(error);
   }
   return;
 };
 
+const getAllApi = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+
+  try {
+    const searchUser = await User.findById(userId);
+    if (!searchUser) {
+      res.send("No user found");
+      return;
+    }
+    const apiIds = searchUser?.apiId;
+    const allApis = await apiModel.find({
+      _id: {
+        $in: apiIds,
+      },
+    });
+
+    res.send(allApis);
+  } catch (error) {
+    res.status(400).send("Internal Server Error");
+  }
+  return;
+};
+
 const deleteApiID = async (req: Request, res: Response) => {
   const { id, userId } = req.body;
-  console.log("delete id ", id);
-  console.log("userId ", userId);
 
   const deletedaPI = await apiModel.findOneAndDelete(id);
 
@@ -155,10 +176,6 @@ const deleteAllApi = async (req: Request, res: Response) => {
       }
     );
 
-    // updatedUser.apiId = [];
-
-    // const updatedUserResult = await updatedUser.save();
-
     res.status(200).send(newUserData);
     return;
   } catch (error) {
@@ -167,26 +184,33 @@ const deleteAllApi = async (req: Request, res: Response) => {
   }
 };
 
-const getAllApi = async (req: Request, res: Response) => {
-  const { userId } = req.params;
+const deleteSelectedApi = async (req: Request, res: Response) => {
+  const { userId, id }: { id: string[]; userId: string } = req.body;
 
-  try {
-    const searchUser = await User.findById(userId);
-    if (!searchUser) {
-      res.send("No user found");
-      return;
-    }
-    const apiIds = searchUser?.apiId;
-    const allApis = await apiModel.find({
-      _id: {
-        $in: apiIds,
-      },
-    });
+  const putSelectedApi = await apiModel.deleteMany({
+    _id: {
+      $in: id.map((a) => new mongoose.Types.ObjectId(a)),
+    },
+  });
 
-    res.send(allApis);
-  } catch (error) {
-    res.status(400).send("Internal Server Error");
+  const searchUser = await User.findById(userId);
+  if (!searchUser) {
+    res.send({ response: "Cannot find user" });
+    return;
   }
+  const apiIDs = searchUser.apiId;
+  const updatedApiIds = apiIDs.filter((a) => !id.includes(a.toString()));
+
+  const updateUser = await User.findByIdAndUpdate(
+    userId,
+    {
+      apiId: updatedApiIds.map((value) => new mongoose.Types.ObjectId(value)),
+    },
+    {
+      new: true,
+    }
+  );
+  res.status(200).send({ response: updateUser });
   return;
 };
 
@@ -198,4 +222,5 @@ export default {
   deleteApiID,
   deleteAllApi,
   getAllApi,
+  deleteSelectedApi,
 };
