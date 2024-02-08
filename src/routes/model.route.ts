@@ -11,5 +11,5 @@ modelRouter.get("/getUser/:userId", modelsController.getUser);
 modelRouter.delete("/deleteApiID", modelsController.deleteApiID);
 modelRouter.delete("/deleteAll", modelsController.deleteAllApi);
 modelRouter.delete("/deleteSelected", modelsController.deleteSelectedApi);
-
+modelRouter.put("/editAPI", modelsController.editApi);
 export default modelRouter;

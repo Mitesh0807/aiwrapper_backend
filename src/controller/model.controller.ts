@@ -214,6 +214,41 @@ const deleteSelectedApi = async (req: Request, res: Response) => {
   return;
 };
 
+const editApi = async (req: Request, res: Response) => {
+  const { userId, id } = req.body;
+  if (
+    !userId ||
+    !mongoose.Types.ObjectId.isValid(userId) ||
+    !id ||
+    !mongoose.Types.ObjectId.isValid(id)
+  ) {
+    res.send({ response: "User not found " });
+    return;
+  }
+  delete req.body?.userId;
+  delete req.body?.id;
+
+  const checkAPI = await User.findById(userId);
+
+  if (!checkAPI) {
+    console.log("checkAPI", checkAPI);
+    res.send({ response: "No user found" });
+    return;
+  }
+  if (!checkAPI.apiId.includes(new mongoose.Types.ObjectId(id))) {
+    res.send({ response: "Not your api key to delete" });
+    return;
+  }
+  const updateAPI = await apiModel.findByIdAndUpdate(
+    id,
+    { $set: req.body },
+    { new: true }
+  );
+  console.log("updateAPI", updateAPI);
+  res.send({ response: updateAPI });
+  return;
+};
+
 export default {
   modelsList,
   createUser,
@@ -223,4 +258,5 @@ export default {
   deleteAllApi,
   getAllApi,
   deleteSelectedApi,
+  editApi,
 };
