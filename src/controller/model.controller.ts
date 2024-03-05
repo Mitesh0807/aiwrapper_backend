@@ -244,7 +244,7 @@ const editApi = async (req: Request, res: Response) => {
     { $set: req.body },
     { new: true }
   );
-  console.log("updateAPI", updateAPI);
+
   res.send({ response: updateAPI });
   return;
 };

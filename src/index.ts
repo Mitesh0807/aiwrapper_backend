@@ -17,10 +17,14 @@ app.use(cors());
 
 import promptRouters from "./routes/prompt.route";
 import modelRouter from "./routes/model.route";
+import chatHistoryRouter from "./routes/chatHistory.route";
+import chatDetailRouter from "./routes/chatDetail";
 
 app.use("/generate", promptRouters);
 
 app.use("/user", modelRouter);
+app.use("/chatHistory", chatHistoryRouter);
+app.use("/chatDetail", chatDetailRouter);
 
 app.listen(process.env.PORT_NUMBER, () => {
   console.log("server running");
