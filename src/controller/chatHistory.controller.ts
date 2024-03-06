@@ -31,9 +31,16 @@ const chatHistory = async (req: Request, res: Response) => {
         promptDetails: prompt,
         promptResponse: text,
         user_id,
+        chatID: newChat._id,
       });
 
-      res.status(200).send({ response: newChat });
+      res.status(200).send({
+        promptResponse: text,
+        _id: newChat._id,
+        prompt: newChat.prompt,
+        user_id: newChat.user_id,
+        createdAt: newChat.createdAt,
+      });
     } else {
       const { prompt, chatID } = req?.body;
 
@@ -79,11 +86,11 @@ const getChatHistory = async (req: Request, res: Response) => {
 };
 
 const getChatDetails = async (req: Request, res: Response) => {
-  const { user_id } = req.body;
+  const { chat_id } = req.body;
   try {
-    const chatDtailsResponse = await chatDetailsModel
-      .find({ chatID: user_id })
-      .sort({ createdAt: -1 });
+    const chatDtailsResponse = await chatDetailsModel.find({
+      chatID: new mongoose.Types.ObjectId(chat_id),
+    });
     res.send({ reqsponse: chatDtailsResponse });
   } catch (error) {
     res.status(500).send({
