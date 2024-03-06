@@ -61,14 +61,14 @@ const chatHistory = async (req: Request, res: Response) => {
   }
 };
 
-const getChatDetails = async (req: Request, res: Response) => {
+const getChatHistory = async (req: Request, res: Response) => {
   const { user_id } = req.body;
 
   try {
     const getDetails = await chatHistorySchema
       .find({ user_id })
       .populate("_id")
-      .sort({ createdAt: 1 });
+      .sort({ createdAt: -1 });
 
     res.status(200).send({ response: getDetails });
   } catch (error) {
@@ -78,7 +78,22 @@ const getChatDetails = async (req: Request, res: Response) => {
   }
 };
 
+const getChatDetails = async (req: Request, res: Response) => {
+  const { user_id } = req.body;
+  try {
+    const chatDtailsResponse = await chatDetailsModel
+      .find({ chatID: user_id })
+      .sort({ createdAt: -1 });
+    res.send({ reqsponse: chatDtailsResponse });
+  } catch (error) {
+    res.status(500).send({
+      response: "Not able to fetch details, check User or try again later ",
+    });
+  }
+};
+
 export default {
   chatHistory,
+  getChatHistory,
   getChatDetails,
 };
