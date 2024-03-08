@@ -43,7 +43,6 @@ const chatHistory = async (req: Request, res: Response) => {
       });
     } else {
       const { prompt, chatID } = req?.body;
-
       const model = genAI.getGenerativeModel({ model: "gemini-pro" });
       const result = await model.generateContentStream([prompt]);
       let text = "";
@@ -86,11 +85,13 @@ const getChatHistory = async (req: Request, res: Response) => {
 };
 
 const getChatDetails = async (req: Request, res: Response) => {
-  const { chat_id } = req.body;
+  const { chatID } = req.body;
+  console.log("chatID :", chatID);
   try {
     const chatDtailsResponse = await chatDetailsModel.find({
-      chatID: new mongoose.Types.ObjectId(chat_id),
+      chatID: new mongoose.Types.ObjectId(chatID),
     });
+    console.log("chatDtailsResponse :", chatDtailsResponse);
     res.send({ reqsponse: chatDtailsResponse });
   } catch (error) {
     res.status(500).send({
