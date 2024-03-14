@@ -90,7 +90,7 @@ const getChatDetails = async (req: Request, res: Response) => {
   try {
     const chatDtailsResponse = await chatDetailsModel.find({
       chatID: new mongoose.Types.ObjectId(chatID),
-    });
+    }).sort({ createdAt: 1 });;
     console.log("chatDtailsResponse :", chatDtailsResponse);
     res.send({ reqsponse: chatDtailsResponse });
   } catch (error) {
